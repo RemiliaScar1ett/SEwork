@@ -1,45 +1,51 @@
 @echo off
 setlocal
 
-rem === 配置 ===
+rem ====== change JAVA_HOME to your real JDK path ======
+set "JAVA_HOME=C:\Program Files\Java\jdk-21"
+
+if not exist "%JAVA_HOME%\bin\jar.exe" (
+  echo jar.exe not found in %JAVA_HOME%\bin
+  exit /b 1
+)
+
 set OUT_DIR=out
 set LIB_DIR=lib
-
-rem 这里改成你 lib 目录下 org.json 的真实文件名
-set JSON_JAR_NAME=json-20250517.jar
-
-set JSON_JAR=%LIB_DIR%\%JSON_JAR_NAME%
+set BUILD_TMP=build_tmp
 set JAR_NAME=PurchaseClient.jar
-set MANIFEST_FILE=manifest.mf
+
+rem change this file name to your real json jar
+set JSON_JAR=%LIB_DIR%\json-20250517.jar
 
 if not exist "%OUT_DIR%" (
-    echo Destination %OUT_DIR% not found, Please build_client.bat first.
-    exit /b 1
+  echo Output directory %OUT_DIR% not found. Run build_client.bat first.
+  exit /b 1
 )
 
 if not exist "%JSON_JAR%" (
-    echo JSON not found %JSON_JAR% .
-    exit /b 1
+  echo JSON jar not found: %JSON_JAR%
+  exit /b 1
 )
 
-echo spawning Manifest files %MANIFEST_FILE% ...
-
-rem 注意 echo 后面有空格，不要漏掉
-> "%MANIFEST_FILE%" echo Main-Class: Main
->> "%MANIFEST_FILE%" echo Class-Path: %JSON_JAR%
->> "%MANIFEST_FILE%" echo
-
-echo packing JAR as %JAR_NAME% ...
 if exist "%JAR_NAME%" del "%JAR_NAME%"
 
-jar cfm "%JAR_NAME%" "%MANIFEST_FILE%" -C "%OUT_DIR%" .
+if exist "%BUILD_TMP%" rd /S /Q "%BUILD_TMP%"
+mkdir "%BUILD_TMP%"
 
-if errorlevel 1 (
-    echo packing failed。
-    exit /b 1
-)
+echo Copying compiled classes to temp folder...
+xcopy "%OUT_DIR%\*" "%BUILD_TMP%\" /E /I /Y >nul
 
-echo successfully packed: %JAR_NAME%
-echo run using: java -jar %JAR_NAME%
+echo Unpacking json jar to temp folder...
+pushd "%BUILD_TMP%"
+"%JAVA_HOME%\bin\jar" xf "..\%JSON_JAR%"
+popd
 
+echo Building fat jar: %JAR_NAME% ...
+rem Main is the entry class (no package)
+"%JAVA_HOME%\bin\jar" cfe "%JAR_NAME%" Main -C "%BUILD_TMP%" .
+
+echo Cleaning temp folder...
+rd /S /Q "%BUILD_TMP%"
+
+echo Done. Fat jar created: %JAR_NAME%
 endlocal
