@@ -7,7 +7,6 @@ import model.AuthSession;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 
 /**
  * 登录窗口：输入用户名/密码，登录成功后打开 MainFrame。

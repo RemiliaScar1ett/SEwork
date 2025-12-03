@@ -1,5 +1,6 @@
 // server/src/main.cpp
 #include <iostream>
+#include <chrono>
 #include "net/TcpServer.h"
 #include "protocol/RequestDispatcher.h"
 #include "persistence/DataStorage.h"
@@ -36,8 +37,25 @@ int main()
                                  materialService,supplierService,
                                  orderService,inventoryService);
 
+
+
+
     // 4. 启动 TCP 服务器
     TcpServer server(5000,dispatcher);
+
+    using clock=std::chrono::steady_clock;
+    auto lastSave=clock::now();
+    auto interval=std::chrono::seconds(30);
+    server.setTickCallback([&storage,&lastSave,&interval](){
+        auto now=clock::now();
+        if(now-lastSave>=interval)
+        {
+            storage.saveAll();
+            lastSave=now;
+            std::cout<<"[Autosave] data saved.\n";
+        }
+    });
+
     server.start();
 
     // 5. 服务器结束后保存数据

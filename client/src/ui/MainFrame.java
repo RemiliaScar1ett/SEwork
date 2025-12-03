@@ -4,6 +4,9 @@ import net.TcpClient;
 import service.*;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -82,6 +85,21 @@ public class MainFrame extends JFrame {
         tabbedPane.addTab("订单管理",orderPanel);
         tabbedPane.addTab("收货管理",receivePanel);
         tabbedPane.addTab("库存查询",inventoryPanel);
+
+        tabbedPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e){
+                Component c=tabbedPane.getSelectedComponent();
+                if(c instanceof RefreshablePanel){
+                    ((RefreshablePanel)c).reloadData();
+                }
+            }
+        });
+        
+        Component c=tabbedPane.getSelectedComponent();
+        if(c instanceof RefreshablePanel){
+            ((RefreshablePanel)c).reloadData();
+        }
 
         setLayout(new BorderLayout());
         add(tabbedPane,BorderLayout.CENTER);

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 物资管理面板：示范完整实现的 UI + service 调用。
  */
-public class MaterialPanel extends JPanel {
+public class MaterialPanel extends JPanel implements RefreshablePanel {
     private final MaterialClientService materialService;
 
     private JTable table;
@@ -141,5 +141,11 @@ public class MaterialPanel extends JPanel {
                     "网络错误: "+ex.getMessage(),
                     "错误",JOptionPane.ERROR_MESSAGE);
         }
+    }
+    
+    @Override
+    public void reloadData()
+    {
+        loadMaterials();
     }
 }

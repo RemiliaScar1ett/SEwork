@@ -26,5 +26,6 @@ E:\Workplace\SEwork\client\src\ui\MainFrame.java
 E:\Workplace\SEwork\client\src\ui\MaterialPanel.java
 E:\Workplace\SEwork\client\src\ui\OrderPanel.java
 E:\Workplace\SEwork\client\src\ui\ReceivePanel.java
+E:\Workplace\SEwork\client\src\ui\RefreshablePanel.java
 E:\Workplace\SEwork\client\src\ui\SupplierPanel.java
 E:\Workplace\SEwork\client\src\ui\UserPanel.java

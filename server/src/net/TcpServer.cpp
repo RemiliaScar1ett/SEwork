@@ -12,6 +12,11 @@ TcpServer::~TcpServer()
     WSACleanup();
 }
 
+void TcpServer::setTickCallback(const std::function<void()>&cb)
+{
+    tickCallback=cb;
+}
+
 bool TcpServer::initWinsock()
 {
     WSADATA wsa;
@@ -134,5 +139,7 @@ void TcpServer::handleClient(SOCKET clientSock)
             break;
         }
         std::cout<<"[Server] sent: "<<resp;
+
+        if(tickCallback) tickCallback();
     }
 }
