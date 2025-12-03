@@ -19,7 +19,6 @@ set(SERVER_SOURCES
     src/net/TcpServer.cpp
 
     src/protocol/RequestDispatcher.cpp
-    # 如果你后面加了 Request/Response 的独立实现文件，也可以加在这里
     # src/protocol/Request.cpp
     # src/protocol/Response.cpp
 
@@ -30,20 +29,22 @@ set(SERVER_SOURCES
     src/service/OrderService.cpp
     src/service/InventoryService.cpp
 
-    # src/repository/UserRepository.cpp
-    # src/repository/MaterialRepository.cpp
-    # src/repository/SupplierRepository.cpp
-    # src/repository/OrderRepository.cpp
-    # src/repository/InventoryRepository.cpp
+    src/repository/UserRepository.cpp
+    src/repository/MaterialRepository.cpp
+    src/repository/SupplierRepository.cpp
+    src/repository/OrderRepository.cpp
+    src/repository/InventoryRepository.cpp
+
+    src/persistence/DataStorage.cpp
 )
 
-# add_executable(PurchaseServer ${SERVER_SOURCES})
+add_executable(PurchaseServer ${SERVER_SOURCES})
 
-# # Windows 下链接 ws2_32
-# if(WIN32)
-#     target_compile_definitions(PurchaseServer PRIVATE _WIN32_WINNT=0x0601 WIN32_LEAN_AND_MEAN)
-#     target_link_libraries(PurchaseServer ws2_32)
-# endif()
+# Windows 下链接 ws2_32
+if(WIN32)
+    target_compile_definitions(PurchaseServer PRIVATE _WIN32_WINNT=0x0601 WIN32_LEAN_AND_MEAN)
+    target_link_libraries(PurchaseServer ws2_32)
+endif()
 
 # 可以按目录分组（在 VS 里显示好看，可选）
 source_group("Source Files" FILES src/main.cpp)
@@ -57,21 +58,21 @@ source_group("Source Files\\service" FILES
     src/service/OrderService.cpp
     src/service/InventoryService.cpp
 )
-# source_group("Source Files\\repository" FILES
-#     src/repository/UserRepository.cpp
-#     src/repository/MaterialRepository.cpp
-#     src/repository/SupplierRepository.cpp
-#     src/repository/OrderRepository.cpp
-#     src/repository/InventoryRepository.cpp
-# )
-
-# Service 层测试
-add_executable(PurchaseServerTests
-    tests/ServiceTest.cpp
-    src/service/AuthService.cpp
-    src/service/UserService.cpp
-    src/service/MaterialService.cpp
-    src/service/SupplierService.cpp
-    src/service/OrderService.cpp
-    src/service/InventoryService.cpp
+source_group("Source Files\\repository" FILES
+    src/repository/UserRepository.cpp
+    src/repository/MaterialRepository.cpp
+    src/repository/SupplierRepository.cpp
+    src/repository/OrderRepository.cpp
+    src/repository/InventoryRepository.cpp
 )
+
+# # Service 层测试
+# add_executable(PurchaseServerTests
+#     tests/ServiceTest.cpp
+#     src/service/AuthService.cpp
+#     src/service/UserService.cpp
+#     src/service/MaterialService.cpp
+#     src/service/SupplierService.cpp
+#     src/service/OrderService.cpp
+#     src/service/InventoryService.cpp
+# )

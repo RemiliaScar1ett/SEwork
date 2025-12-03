@@ -115,21 +115,24 @@ bool TcpServer::sendAll(SOCKET clientSock,const std::string&data)
 
 void TcpServer::handleClient(SOCKET clientSock)
 {
-    std::string line;
-    if(!readLine(clientSock,line))
+    while(true)
     {
-        std::cerr<<"readLine failed\n";
-        return;
-    }
-    std::cout<<"[Server] recv: "<<line<<"\n";
+        std::string line;
+        if(!readLine(clientSock,line))
+        {
+            std::cerr<<"readLine failed or client closed\n";
+            break;
+        }
+        std::cout<<"[Server] recv: "<<line<<"\n";
 
-    std::string resp=dispatcher.handleRequest(line);
-    if(!resp.empty() && resp.back()!='\n') resp.push_back('\n');
+        std::string resp=dispatcher.handleRequest(line);
+        resp.push_back('\n');
 
-    if(!sendAll(clientSock,resp))
-    {
-        std::cerr<<"sendAll failed\n";
-        return;
+        if(!sendAll(clientSock,resp))
+        {
+            std::cerr<<"sendAll failed\n";
+            break;
+        }
+        std::cout<<"[Server] sent: "<<resp;
     }
-    std::cout<<"[Server] sent: "<<resp;
 }

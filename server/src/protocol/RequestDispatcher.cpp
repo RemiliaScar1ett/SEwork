@@ -3,7 +3,7 @@
 #include "protocol/Request.h"
 #include "protocol/Response.h"
 
-#include "thirdparty/json.hpp"   // json.hpp 放在 server/third_party/
+#include "thirdparty/json.hpp"   // json.hpp 放在 server/thirdparty/
 #include <iostream>
 #include <stdexcept>
 
